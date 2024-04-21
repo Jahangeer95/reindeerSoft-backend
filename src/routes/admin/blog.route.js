@@ -17,8 +17,12 @@ router
   .all(validateBlogId)
   .get(blogsController.getBlogDetail)
   .delete(blogsController.deleteBlog)
-  .post()
-  .put()
+  .post(validateNewBlog, blogsController.createNewBlog)
+  .put(validateNewBlog, blogsController.updateBlog)
   .patch();
+
+//  patch controller is left which will be
+// used to update the part of the blog just like
+// isPublished, noOfViewers,likes and dislikes
 
 export { router as adminBlogRouter };

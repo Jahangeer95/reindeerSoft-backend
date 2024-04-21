@@ -32,6 +32,6 @@ export function validateNewBlog(req, res, next) {
     validationError.statusCode = 400;
     return next(validationError);
   }
-  console.log(value);
+
   next();
 }

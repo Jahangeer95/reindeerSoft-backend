@@ -8,6 +8,12 @@ const getAllBlogs = AsyncMiddleware(async (req, res) => {
   res.send(blogs);
 });
 
+const getAllPublishedBlogs = AsyncMiddleware(async (req, res) => {
+  const publishedBlogs = await blogService.findAllPublishedBlogs();
+
+  res.send(publishedBlogs);
+});
+
 const getBlogDetail = AsyncMiddleware(async (req, res) => {
   const { blogId } = req.params;
   const blogDetail = await blogService.findBlogDetails(blogId);
@@ -25,10 +31,14 @@ const deleteBlog = AsyncMiddleware(async (req, res) => {
   res.send({ message: "Blog deleted successfully" });
 });
 
+export const createNewBlog = AsyncMiddleware(async (req, res) => {});
+
 const blogsController = {
   getAllBlogs,
+  getAllPublishedBlogs,
   getBlogDetail,
   deleteBlog,
+  createNewBlog,
 };
 
 export { blogsController };

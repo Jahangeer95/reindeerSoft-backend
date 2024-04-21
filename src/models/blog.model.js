@@ -6,6 +6,10 @@ export const blogSchema = new Schema(
       type: String,
       required: true,
     },
+    seoDescription: {
+      type: String,
+      required: true,
+    },
     category: {
       type: String,
       required: true,
@@ -15,6 +19,11 @@ export const blogSchema = new Schema(
       type: String,
       requird: true,
     },
+    blogBannerAlt: {
+      type: String,
+      requird: true,
+    },
+    videoLink: String,
     content: {
       type: String,
       required: true,

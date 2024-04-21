@@ -5,8 +5,13 @@ async function comparePassword(bodyPassword, userSavedPassword) {
   return isPasswordValid;
 }
 
+function blogNotFound(res) {
+  return res.status(400).send({ message: "Blog not found" });
+}
+
 const helper = {
   comparePassword,
+  blogNotFound,
 };
 
 export { helper };

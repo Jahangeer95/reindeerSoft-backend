@@ -26,7 +26,9 @@ const deleteBlog = AsyncMiddleware(async (req, res) => {
   const { blogId } = req.params;
 
   const deletedBlog = await blogService.findAndDeleteBlog(blogId);
-  if (deleteBlog) return helper.blogNotFound(res, deletedBlog);
+  if (!deleteBlog) return helper.blogNotFound(res, deletedBlog);
+
+  await blogService.findAndDeleteRelatedBlogId(blogId);
 
   res.send({ message: "Blog deleted successfully" });
 });

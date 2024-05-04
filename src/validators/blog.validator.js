@@ -21,6 +21,7 @@ export function validateNewBlog(req, res, next) {
     videoLink: Joi.string()
       .uri({ scheme: ["http", "https"] })
       .trim()
+      .allow(null, "")
       .optional(),
     content: Joi.string().required(),
     isPublished: Joi.boolean().optional(),

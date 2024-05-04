@@ -35,6 +35,15 @@ process.on("uncaughtException", (err) => {
 
 const corsOptions = {
   exposedHeaders: "reindeersoft_user_token",
+  allowedHeaders: [
+    "Content-Type",
+    "reindeersoft_user_token",
+    "Content-Length",
+    "X-Requested-With",
+    "Accept",
+    "access-control-allow-origin",
+  ],
+  optionsSuccessStatus: 200,
   credentials: true,
   origin: true,
 };
@@ -43,7 +52,8 @@ app.use(express.json({ limit: "30mb" }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
 app.use(cors(corsOptions));
-app.options("*", cors());
+// app.options("*", cors());
+
 app.use(compression());
 app.use(helmet());
 

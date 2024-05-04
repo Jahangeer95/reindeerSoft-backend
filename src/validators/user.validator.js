@@ -19,7 +19,7 @@ export function validateNewUser(req, res, next) {
 
 export function validateUser(req, res, next) {
   const joiSchema = Joi.object({
-    name: Joi.string().min(5).max(50).required(),
+    // name: Joi.string().min(5).max(50).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(7).max(100).required(),
   });

@@ -2,7 +2,7 @@ import { ReindeerSoftBlog } from "../models/blog.model.js";
 
 async function findAllBlogs() {
   // aggregation needs to be done for related blogs
-  return await ReindeerSoftBlog.find().sort({ date: -1 });
+  return await ReindeerSoftBlog.find().sort({ publishDate: -1 });
 }
 
 async function findAllPublishedBlogs() {
@@ -16,6 +16,14 @@ async function findBlogDetails(blogId) {
 
 async function findAndDeleteBlog(blogId) {
   return await ReindeerSoftBlog.findByIdAndDelete(blogId);
+}
+
+async function findAndDeleteRelatedBlogId(blogId) {
+  return await ReindeerSoftBlog.findOneAndUpdate(
+    { relatedBlogIds: blogId },
+    { $pull: { relatedBlogIds: blogId } },
+    { new: true }
+  );
 }
 
 async function createNewBlog(newBlogData) {
@@ -70,6 +78,7 @@ const blogService = {
   createNewBlog,
   saveIdForRelatedBlog,
   updateExistingBlog,
+  findAndDeleteRelatedBlogId,
 };
 
 export { blogService };

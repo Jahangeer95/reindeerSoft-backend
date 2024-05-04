@@ -18,7 +18,7 @@ router
   .get(blogsController.getBlogDetail)
   .delete(blogsController.deleteBlog)
   .post(validateNewBlog, blogsController.createNewBlog)
-  .put(validateNewBlog, blogsController.updateBlog)
+  .put(blogsController.updateBlog)
   .patch();
 
 //  patch controller is left which will be

@@ -11,6 +11,21 @@ export function validateBlogId(req, res, next) {
   next();
 }
 
+export function validateSlug(req, res, next) {
+  const slugSchema = Joi.object({
+    slug: Joi.string().required(),
+  });
+
+  const { error } = slugSchema.validate(req.params);
+
+  if (error) {
+    const validationError = new Error("Invalid slug");
+    validationError.statusCode = 400;
+    return next(validationError);
+  }
+  next();
+}
+
 export function validateNewBlog(req, res, next) {
   const blogSchema = Joi.object({
     title: Joi.string().required(),
@@ -28,6 +43,24 @@ export function validateNewBlog(req, res, next) {
   });
 
   const { error, value } = blogSchema.validate(req.body);
+  if (error) {
+    const validationError = new Error(error.details[0].message);
+    validationError.statusCode = 400;
+    return next(validationError);
+  }
+
+  next();
+}
+
+export function validateBlogField(req, res, next) {
+  const blogPatchSchema = Joi.object({
+    isPublished: Joi.boolean().optional(),
+    likes: Joi.number().min(1).max(1).optional(),
+    dislikes: Joi.number().min(1).max(1).optional(),
+    noOfViewers: Joi.number().min(1).max(1).optional(),
+  });
+  const { error } = blogPatchSchema.validate(req.body);
+
   if (error) {
     const validationError = new Error(error.details[0].message);
     validationError.statusCode = 400;

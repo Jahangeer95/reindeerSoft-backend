@@ -3,6 +3,7 @@ import { blogsController } from "../../controllers/blogs.controller.js";
 import {
   validateBlogId,
   validateNewBlog,
+  validateBlogField,
 } from "../../validators/blog.validator.js";
 
 const router = Router();
@@ -19,10 +20,6 @@ router
   .delete(blogsController.deleteBlog)
   .post(validateNewBlog, blogsController.createNewBlog)
   .put(blogsController.updateBlog)
-  .patch();
-
-//  patch controller is left which will be
-// used to update the part of the blog just like
-// isPublished, noOfViewers,likes and dislikes
+  .patch(validateBlogField, blogsController.patchBlog);
 
 export { router as adminBlogRouter };

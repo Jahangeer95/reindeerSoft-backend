@@ -14,6 +14,10 @@ async function findBlogDetails(blogId) {
   return await ReindeerSoftBlog.findById(blogId);
 }
 
+async function findBlogDetailsWithSlug(slug) {
+  return await ReindeerSoftBlog.findOne({ slug: slug, isPublished: true });
+}
+
 async function findAndDeleteBlog(blogId) {
   return await ReindeerSoftBlog.findByIdAndDelete(blogId);
 }
@@ -70,15 +74,38 @@ async function updateExistingBlog(updatedBlogData, blogId) {
   );
 }
 
+async function publishBlog(publishField, blogId) {
+  await ReindeerSoftBlog.findByIdAndUpdate(
+    { _id: blogId },
+    { $set: publishField },
+    { new: true }
+  );
+}
+
+async function updateLikesDisLikesNoOfViewers(specifiedObj, blogId) {
+  return await ReindeerSoftBlog.findByIdAndUpdate(
+    {
+      _id: blogId,
+    },
+    {
+      $inc: { ...specifiedObj },
+    },
+    { new: true }
+  );
+}
+
 const blogService = {
   findAllBlogs,
   findAllPublishedBlogs,
   findBlogDetails,
+  findBlogDetailsWithSlug,
   findAndDeleteBlog,
   createNewBlog,
   saveIdForRelatedBlog,
   updateExistingBlog,
   findAndDeleteRelatedBlogId,
+  publishBlog,
+  updateLikesDisLikesNoOfViewers,
 };
 
 export { blogService };

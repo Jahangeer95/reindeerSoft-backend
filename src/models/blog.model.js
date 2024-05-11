@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { helper } from "../utils/helper.js";
 
 export const blogSchema = new Schema(
   {
@@ -57,5 +58,25 @@ export const blogSchema = new Schema(
     versionKey: false,
   }
 );
+
+blogSchema.pre("save", function (next) {
+  // Only generate and save slug if it's a new document or the title has changed
+  if (this.isNew || this.isModified("title")) {
+    const slug = helper.generateSlug(this.title); // Generate slug from title
+    this.slug = slug;
+  }
+
+  next();
+});
+
+blogSchema.pre("findOneAndUpdate", function (next) {
+  const updatedBlog = this._update;
+  // Only generate and save slug the title has changed
+  if (updatedBlog?.title) {
+    const slug = helper.generateSlug(updatedBlog?.title); // Generate slug from title
+    updatedBlog.slug = slug;
+  }
+  next();
+});
 
 export const ReindeerSoftBlog = model("ReinddeerSoftBlog", blogSchema);

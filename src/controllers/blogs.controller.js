@@ -22,6 +22,14 @@ const getBlogDetail = AsyncMiddleware(async (req, res) => {
   res.send(blogDetail);
 });
 
+const getBlogDetailWithSlug = AsyncMiddleware(async (req, res) => {
+  const { slug } = req.params;
+  const blogDetail = await blogService.findBlogDetailsWithSlug(slug);
+  if (!blogDetail) return helper.blogNotFound(res, blogDetail);
+
+  res.send(blogDetail);
+});
+
 const deleteBlog = AsyncMiddleware(async (req, res) => {
   const { blogId } = req.params;
 
@@ -33,7 +41,7 @@ const deleteBlog = AsyncMiddleware(async (req, res) => {
   res.send({ message: "Blog deleted successfully" });
 });
 
-export const createNewBlog = AsyncMiddleware(async (req, res) => {
+const createNewBlog = AsyncMiddleware(async (req, res) => {
   const { blogId } = req.params;
   const existingBlog = await blogService.findBlogDetails(blogId);
 
@@ -45,21 +53,65 @@ export const createNewBlog = AsyncMiddleware(async (req, res) => {
   res.send({ message: "Blog created successfully" });
 });
 
-export const updateBlog = AsyncMiddleware(async (req, res) => {
+const updateBlog = AsyncMiddleware(async (req, res) => {
   const { blogId } = req.params;
+
+  const blogDetail = await blogService.findBlogDetails(blogId);
+  if (!blogDetail) return helper.blogNotFound(res, blogDetail);
 
   await blogService.updateExistingBlog(req.body, blogId);
 
   res.send({ message: "Blog updated successfully" });
 });
 
+const patchBlog = AsyncMiddleware(async (req, res) => {
+  const { blogId } = req.params;
+
+  const { isPublished, likes, dislikes, noOfViewers } = req.body;
+
+  const blogDetail = await blogService.findBlogDetails(blogId);
+  if (!blogDetail) return helper.blogNotFound(res, blogDetail);
+
+  if (isPublished) {
+    const date = new Date();
+    const publishBlogObj = {
+      isPublished,
+      publishDate: date,
+    };
+    await blogService.publishBlog(publishBlogObj, blogId);
+    return res.send({ message: "Blog published successfully" });
+  }
+
+  let specifiedObj = {};
+
+  if (likes) {
+    specifiedObj = { likes };
+  }
+  if (dislikes) {
+    specifiedObj = { dislikes };
+  }
+
+  if (noOfViewers) {
+    specifiedObj = { noOfViewers };
+  }
+
+  const upDateBlog = await blogService.updateLikesDisLikesNoOfViewers(
+    specifiedObj,
+    blogId
+  );
+
+  res.send(upDateBlog);
+});
+
 const blogsController = {
   getAllBlogs,
   getAllPublishedBlogs,
   getBlogDetail,
+  getBlogDetailWithSlug,
   deleteBlog,
   createNewBlog,
   updateBlog,
+  patchBlog,
 };
 
 export { blogsController };

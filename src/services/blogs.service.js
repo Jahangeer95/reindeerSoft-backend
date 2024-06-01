@@ -7,7 +7,63 @@ async function findAllBlogs() {
 
 async function findAllPublishedBlogs() {
   // aggregation needs to be done for related blogs
-  return await ReindeerSoftBlog.find({ isPublished: true }).sort({ date: -1 });
+  // return await ReindeerSoftBlog.find({ isPublished: true }).sort({ date: -1 });
+  return await ReindeerSoftBlog.aggregate([
+    { $match: { isPublished: true } },
+    {
+      $lookup: {
+        from: "reinddeersoftblogs",
+        localField: "relatedBlogIds",
+        foreignField: "_id",
+        as: "relatedBlogs",
+      },
+    },
+    {
+      $addFields: {
+        relatedBlogs: {
+          $filter: {
+            input: "$relatedBlogs",
+            as: "blog",
+            cond: { $eq: ["$$blog.isPublished", true] },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        title: 1,
+        seoDescription: 1,
+        category: 1,
+        slug: 1,
+        blogBannerImage: 1,
+        blogBannerAlt: 1,
+        videoLink: 1,
+        content: 1,
+        publishDate: 1,
+        likes: 1,
+        dislikes: 1,
+        noOfViewers: 1,
+        isPublished: 1,
+        // relatedBlogIds: 1,
+        relatedBlogs: {
+          title: 1,
+          seoDescription: 1,
+          category: 1,
+          slug: 1,
+          blogBannerImage: 1,
+          blogBannerAlt: 1,
+          videoLink: 1,
+          content: 1,
+          publishDate: 1,
+          likes: 1,
+          dislikes: 1,
+          noOfViewers: 1,
+          isPublished: 1,
+        },
+      },
+    },
+    { $sort: { publishDate: -1 } },
+  ]);
 }
 
 async function findBlogDetails(blogId) {

@@ -72,7 +72,7 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
   const blogDetail = await blogService.findBlogDetails(blogId);
   if (!blogDetail) return helper.blogNotFound(res, blogDetail);
 
-  if (isPublished) {
+  if (isPublished === true || isPublished === false) {
     const date = new Date();
     const publishBlogObj = {
       isPublished,

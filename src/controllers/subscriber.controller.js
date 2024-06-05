@@ -16,7 +16,9 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   });
 
   if (newUser) {
-    res.send({ message: "Subscribed Successfully." });
+    res
+      .header("subscriber_email", email)
+      .send({ message: "Subscribed Successfully." });
   } else {
     res.status(400).send({ message: "Something Went Wrong" });
   }

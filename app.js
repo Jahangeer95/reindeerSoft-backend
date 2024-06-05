@@ -34,7 +34,7 @@ process.on("uncaughtException", (err) => {
 });
 
 const corsOptions = {
-  exposedHeaders: "reindeersoft_user_token",
+  exposedHeaders: ["reindeersoft_user_token", "subscriber_email"],
   allowedHeaders: [
     "Content-Type",
     "reindeersoft_user_token",

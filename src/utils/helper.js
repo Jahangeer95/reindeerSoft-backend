@@ -10,8 +10,12 @@ function blogNotFound(res) {
 }
 
 function generateSlug(title) {
-  // Convert title to lowercase and replace spaces with hyphens
-  return title.toLowerCase().replace(/\s+/g, "-");
+  // // Convert title to lowercase and replace spaces with hyphens
+  // return title.toLowerCase().replace(/\s+/g, "-");
+  return title
+    .toLowerCase() // Convert to lowercase
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/[^\w\-]+/g, ""); // Remove all non-word characters except hyphens
 }
 
 const helper = {

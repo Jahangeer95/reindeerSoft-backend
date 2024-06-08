@@ -1,6 +1,8 @@
 import { AsyncMiddleware } from "../middlewares/async.middleware.js";
 import { blogService } from "../services/blogs.service.js";
+import { subscriberService } from "../services/subscriber.service.js";
 import { helper } from "../utils/helper.js";
+import mongoose from "mongoose";
 
 const getAllBlogs = AsyncMiddleware(async (req, res) => {
   const blogs = await blogService.findAllBlogs();
@@ -67,7 +69,7 @@ const updateBlog = AsyncMiddleware(async (req, res) => {
 const patchBlog = AsyncMiddleware(async (req, res) => {
   const { blogId } = req.params;
 
-  const { isPublished, likes, dislikes, noOfViewers } = req.body;
+  const { isPublished, likes, dislikes, noOfViewers, email } = req.body;
 
   const blogDetail = await blogService.findBlogDetails(blogId);
   if (!blogDetail) return helper.blogNotFound(res, blogDetail);
@@ -82,25 +84,62 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
     return res.send({ message: "Blog published successfully" });
   }
 
-  let specifiedObj = {};
-
-  if (likes) {
-    specifiedObj = { likes };
-  }
-  if (dislikes) {
-    specifiedObj = { dislikes };
-  }
-
   if (noOfViewers) {
-    specifiedObj = { noOfViewers };
+    const upDatedBlog = await blogService.updateLikesDisLikesNoOfViewers(
+      { noOfViewers },
+      blogId
+    );
+
+    return res.send(upDatedBlog);
   }
 
-  const upDateBlog = await blogService.updateLikesDisLikesNoOfViewers(
-    specifiedObj,
+  const existingSubscriber = await subscriberService.findSubscriberByBlogId(
     blogId
   );
 
-  res.send(upDateBlog);
+  let isLiked = existingSubscriber?.likedPosts?.includes(blogId);
+  let isDisliked = existingSubscriber?.dislikedPosts?.includes(blogId);
+
+  console.log({ isDisliked, isLiked });
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    let specifiedObj = {};
+    let action;
+
+    if (likes) {
+      const removeDislike = isDisliked ? { dislikes: -1 } : {};
+      specifiedObj = isLiked ? {} : { likes, ...removeDislike };
+      action = "like";
+    }
+    if (dislikes) {
+      const removeLike = isLiked ? { likes: -1 } : {};
+      specifiedObj = isDisliked ? {} : { dislikes, ...removeLike };
+      action = "dislike";
+    }
+
+    const subscriberData = await subscriberService.updateSubscriber({
+      email,
+      blogId,
+      action,
+      session,
+    });
+
+    const upDatedBlog = await blogService.updateLikesDisLikesNoOfViewers(
+      specifiedObj,
+      blogId,
+      session
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+    res.send(upDatedBlog);
+  } catch (error) {
+    await session.commitTransaction();
+    session.endSession();
+    res.status(400).send({ message: error.message });
+  }
 });
 
 const blogsController = {

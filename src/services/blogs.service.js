@@ -138,7 +138,7 @@ async function publishBlog(publishField, blogId) {
   );
 }
 
-async function updateLikesDisLikesNoOfViewers(specifiedObj, blogId) {
+async function updateLikesDisLikesNoOfViewers(specifiedObj, blogId, session) {
   return await ReindeerSoftBlog.findByIdAndUpdate(
     {
       _id: blogId,
@@ -146,7 +146,7 @@ async function updateLikesDisLikesNoOfViewers(specifiedObj, blogId) {
     {
       $inc: { ...specifiedObj },
     },
-    { new: true }
+    { new: true, session }
   );
 }
 

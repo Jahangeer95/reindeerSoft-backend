@@ -8,6 +8,14 @@ async function findSubscriberByEmail(email) {
   return user;
 }
 
+async function findSubscriberByBlogId(blogId) {
+  const subscriber = await Subscriber.findOne({
+    $or: [{ likedPosts: blogId }, { dislikedPosts: blogId }],
+  });
+
+  return subscriber;
+}
+
 async function createNewSubscriber({ name, email }) {
   let user = new Subscriber({
     name,
@@ -19,9 +27,33 @@ async function createNewSubscriber({ name, email }) {
   return user;
 }
 
+async function updateSubscriber({ email, blogId, action, session }) {
+  let updateQuery;
+  if (action === "like") {
+    updateQuery = {
+      $addToSet: { likedPosts: blogId },
+      $pull: { dislikedPosts: blogId },
+    };
+  } else if (action === "dislike") {
+    updateQuery = {
+      $addToSet: { dislikedPosts: blogId },
+      $pull: { likedPosts: blogId },
+    };
+  }
+  const updatedData = await Subscriber.findOneAndUpdate(
+    { email: email },
+    { ...updateQuery },
+    { new: true, session }
+  );
+
+  return updatedData;
+}
+
 const subscriberService = {
   findSubscriberByEmail,
+  findSubscriberByBlogId,
   createNewSubscriber,
+  updateSubscriber,
 };
 
 export { subscriberService, createNewSubscriber };

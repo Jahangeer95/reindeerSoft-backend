@@ -15,3 +15,19 @@ export function validateSubscriber(req, res, next) {
 
   next();
 }
+
+export function validateSubscriberEmail(req, res, next) {
+  const subscriberSchema = Joi.object({
+    email: Joi.string().email().required(),
+  });
+  const email = req?.params?.email;
+
+  const { error } = subscriberSchema.validate({ email });
+  if (error) {
+    const validationError = new Error(error.details[0].message);
+    validationError.statusCode = 400;
+    return next(validationError);
+  }
+
+  next();
+}

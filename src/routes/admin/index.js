@@ -9,7 +9,7 @@ import { adminBlogRouter } from "./blog.route.js";
 
 const router = Router();
 
-router.route("/signup").post(validateNewUser, userController.createUser);
+// router.route("/signup").post(validateNewUser, userController.createUser);
 router.route("/login").post(validateUser, userController.loginUser);
 
 router.use("/blogs", authMiddleware, adminBlogRouter);

@@ -24,8 +24,22 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   }
 });
 
+export const getSubscriberData = AsyncMiddleware(async (req, res) => {
+  const { email } = req.params;
+
+  const existingUser = await subscriberService.findSubscriberByEmail(email);
+  if (!existingUser) {
+    return res
+      .status(400)
+      .send({ message: "You didn't subscribed from this email." });
+  }
+
+  res.send(existingUser);
+});
+
 const subscriberController = {
   postSubscriber,
+  getSubscriberData,
 };
 
 export { subscriberController };

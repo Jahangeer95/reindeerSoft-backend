@@ -93,14 +93,18 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
     return res.send(upDatedBlog);
   }
 
-  const existingSubscriber = await subscriberService.findSubscriberByBlogId(
-    blogId
+  const existingSubscriber = await subscriberService.findSubscriberByEmail(
+    email
   );
+
+  if (!existingSubscriber) {
+    return res
+      .status(400)
+      .send({ message: "Subscribed us for liking or disliking our blogs." });
+  }
 
   let isLiked = existingSubscriber?.likedPosts?.includes(blogId);
   let isDisliked = existingSubscriber?.dislikedPosts?.includes(blogId);
-
-  console.log({ isDisliked, isLiked });
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -134,10 +138,12 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
 
     await session.commitTransaction();
     session.endSession();
+
     res.send(upDatedBlog);
   } catch (error) {
     await session.commitTransaction();
     session.endSession();
+
     res.status(400).send({ message: error.message });
   }
 });

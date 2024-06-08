@@ -6,8 +6,8 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   const existingUser = await subscriberService.findSubscriberByEmail(email);
   if (existingUser) {
     return res
-      .status(400)
-      .send({ message: "You have already subscribed from this email." });
+      .header("subscriber_email", existingUser?.email)
+      .send({ message: "Subscribed Successfully." });
   }
 
   let newUser = await subscriberService.createNewSubscriber({

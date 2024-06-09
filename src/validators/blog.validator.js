@@ -58,7 +58,7 @@ export function validateBlogField(req, res, next) {
     likes: Joi.number().min(1).max(1).optional(),
     dislikes: Joi.number().min(1).max(1).optional(),
     noOfViewers: Joi.number().min(1).max(1).optional(),
-    email: Joi.string().email().optional(),
+    email: Joi.string().email().allow(null, "").optional(),
   });
   const { error } = blogPatchSchema.validate(req.body);
 

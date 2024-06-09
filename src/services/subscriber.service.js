@@ -50,7 +50,8 @@ async function updateSubscriber({ email, blogId, action, session }) {
 }
 
 async function removeSubscriberByEmail(email) {
-  return await Subscriber.findOneAndDelete({ email: email });
+  const deletedDocumnt = await Subscriber.findOneAndDelete({ email: email });
+  return deletedDocumnt;
 }
 
 const subscriberService = {

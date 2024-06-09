@@ -37,9 +37,27 @@ export const getSubscriberData = AsyncMiddleware(async (req, res) => {
   res.send(existingUser);
 });
 
+export const deleteSubscriber = AsyncMiddleware(async (req, res) => {
+  const { email } = req.params;
+
+  const existingUser = await subscriberService.findSubscriberByEmail(email);
+  if (!existingUser) {
+    return res
+      .status(400)
+      .send({ message: "You didn't subscribed from this email." });
+  }
+
+  const deletedSubscriber = await subscriberService.removeSubscriberByEmail(
+    email
+  );
+
+  res.send({ message: "Unsubscribed successfully..." });
+});
+
 const subscriberController = {
   postSubscriber,
   getSubscriberData,
+  deleteSubscriber,
 };
 
 export { subscriberController };

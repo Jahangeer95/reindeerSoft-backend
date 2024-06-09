@@ -49,11 +49,16 @@ async function updateSubscriber({ email, blogId, action, session }) {
   return updatedData;
 }
 
+async function removeSubscriberByEmail(email) {
+  return await Subscriber.findOneAndDelete({ email: email });
+}
+
 const subscriberService = {
   findSubscriberByEmail,
   findSubscriberByBlogId,
   createNewSubscriber,
   updateSubscriber,
+  removeSubscriberByEmail,
 };
 
-export { subscriberService, createNewSubscriber };
+export { subscriberService };

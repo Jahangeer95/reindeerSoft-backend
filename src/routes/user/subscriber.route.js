@@ -11,6 +11,8 @@ router.route("/").post(validateSubscriber, subscriberController.postSubscriber);
 
 router
   .route("/:email")
-  .get(validateSubscriberEmail, subscriberController.getSubscriberData);
+  .all(validateSubscriberEmail)
+  .get(subscriberController.getSubscriberData)
+  .delete(subscriberController.deleteSubscriber);
 
 export { router as publicSubscriberRouter };

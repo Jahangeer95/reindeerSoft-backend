@@ -5,7 +5,10 @@ async function findAllBlogs() {
   return await ReindeerSoftBlog.find().sort({ publishDate: -1 });
 }
 
-async function findAllPublishedBlogs() {
+async function findAllPublishedBlogs(page, limit) {
+  const pageNumber = parseInt(page, 10) || 1;
+  const limitNumber = parseInt(limit, 10) || 10;
+  const skipNumber = (pageNumber - 1) * limitNumber;
   // aggregation needs to be done for related blogs
   // return await ReindeerSoftBlog.find({ isPublished: true }).sort({ date: -1 });
   return await ReindeerSoftBlog.aggregate([
@@ -63,6 +66,8 @@ async function findAllPublishedBlogs() {
       },
     },
     { $sort: { publishDate: -1 } },
+    { $skip: skipNumber },
+    { $limit: limitNumber },
   ]);
 }
 

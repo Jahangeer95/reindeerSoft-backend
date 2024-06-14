@@ -11,7 +11,8 @@ const getAllBlogs = AsyncMiddleware(async (req, res) => {
 });
 
 const getAllPublishedBlogs = AsyncMiddleware(async (req, res) => {
-  const publishedBlogs = await blogService.findAllPublishedBlogs();
+  const { page = 1, limit = 10 } = req.query;
+  const publishedBlogs = await blogService.findAllPublishedBlogs(page, limit);
 
   res.send(publishedBlogs);
 });

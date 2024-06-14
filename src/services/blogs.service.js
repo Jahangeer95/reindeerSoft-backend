@@ -11,7 +11,7 @@ async function findAllPublishedBlogs(page, limit) {
   const skipNumber = (pageNumber - 1) * limitNumber;
   // aggregation needs to be done for related blogs
   // return await ReindeerSoftBlog.find({ isPublished: true }).sort({ date: -1 });
-  return await ReindeerSoftBlog.aggregate([
+  const blogsBasedonQuery = await ReindeerSoftBlog.aggregate([
     { $match: { isPublished: true } },
     {
       $lookup: {
@@ -69,6 +69,12 @@ async function findAllPublishedBlogs(page, limit) {
     { $skip: skipNumber },
     { $limit: limitNumber },
   ]);
+
+  const totalBlogs = await ReindeerSoftBlog.countDocuments({
+    isPublished: true,
+  });
+
+  return { blogsBasedonQuery, totalBlogs };
 }
 
 async function findBlogDetails(blogId) {

@@ -100,7 +100,7 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
   if (!existingSubscriber) {
     return res
       .status(400)
-      .send({ message: "Subscribed us for liking or disliking our blogs." });
+      .send({ message: "Please subscribe us to like or dislike the blog!" });
   }
 
   let isLiked = existingSubscriber?.likedPosts?.includes(blogId);

@@ -5,10 +5,16 @@ async function findAllBlogs(page) {
   const pageNumber = parseInt(page, 10) || 1;
   const limitNumber = 10;
   const skipNumber = (pageNumber - 1) * limitNumber;
-  return await ReindeerSoftBlog.find()
+  const blogs = await ReindeerSoftBlog.find()
     .sort({ publishDate: -1 })
     .skip(skipNumber)
     .limit(limitNumber);
+
+  const totalBlogs = await ReindeerSoftBlog.countDocuments({
+    isPublished: true,
+  });
+
+  return { blogs, totalBlogs };
 }
 
 async function findAllPublishedBlogs(page, limit) {

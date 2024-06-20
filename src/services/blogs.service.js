@@ -1,8 +1,14 @@
 import { ReindeerSoftBlog } from "../models/blog.model.js";
 
-async function findAllBlogs() {
+async function findAllBlogs(page) {
   // aggregation needs to be done for related blogs
-  return await ReindeerSoftBlog.find().sort({ publishDate: -1 });
+  const pageNumber = parseInt(page, 10) || 1;
+  const limitNumber = 10;
+  const skipNumber = (pageNumber - 1) * limitNumber;
+  return await ReindeerSoftBlog.find()
+    .sort({ publishDate: -1 })
+    .skip(skipNumber)
+    .limit(limitNumber);
 }
 
 async function findAllPublishedBlogs(page, limit) {

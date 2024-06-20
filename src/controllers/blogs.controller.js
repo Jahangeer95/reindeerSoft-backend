@@ -5,7 +5,8 @@ import { helper } from "../utils/helper.js";
 import mongoose from "mongoose";
 
 const getAllBlogs = AsyncMiddleware(async (req, res) => {
-  const blogs = await blogService.findAllBlogs();
+  const { page = 1 } = req.query;
+  const blogs = await blogService.findAllBlogs(page);
 
   res.send(blogs);
 });

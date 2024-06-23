@@ -39,20 +39,20 @@ async function updateSubscriber({
   if (action === "like") {
     updateQuery = isLiked
       ? {
-          $addToSet: { likedPosts: blogId },
-          $pull: { dislikedPosts: blogId },
+          $pull: { likedPosts: blogId },
         }
       : {
-          $pull: { likedPosts: blogId },
+          $addToSet: { likedPosts: blogId },
+          $pull: { dislikedPosts: blogId },
         };
   } else if (action === "dislike") {
     updateQuery = isDisliked
       ? {
-          $addToSet: { dislikedPosts: blogId },
-          $pull: { likedPosts: blogId },
+          $pull: { dislikedPosts: blogId },
         }
       : {
-          $pull: { dislikedPosts: blogId },
+          $addToSet: { dislikedPosts: blogId },
+          $pull: { likedPosts: blogId },
         };
   }
   const updatedData = await Subscriber.findOneAndUpdate(

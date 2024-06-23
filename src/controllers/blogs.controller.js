@@ -119,12 +119,14 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
 
     if (likes) {
       const removeDislike = isDisliked ? { dislikes: -1 } : {};
-      specifiedObj = isLiked ? {} : { likes, ...removeDislike };
+      specifiedObj = isLiked ? { likes: -1 } : { likes, ...removeDislike };
       action = "like";
     }
     if (dislikes) {
       const removeLike = isLiked ? { likes: -1 } : {};
-      specifiedObj = isDisliked ? {} : { dislikes, ...removeLike };
+      specifiedObj = isDisliked
+        ? { dislikes: -1 }
+        : { dislikes, ...removeLike };
       action = "dislike";
     }
 

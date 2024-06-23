@@ -27,18 +27,33 @@ async function createNewSubscriber({ name, email }) {
   return user;
 }
 
-async function updateSubscriber({ email, blogId, action, session }) {
+async function updateSubscriber({
+  email,
+  blogId,
+  action,
+  session,
+  isLiked,
+  isDisliked,
+}) {
   let updateQuery;
   if (action === "like") {
-    updateQuery = {
-      $addToSet: { likedPosts: blogId },
-      $pull: { dislikedPosts: blogId },
-    };
+    updateQuery = isLiked
+      ? {
+          $addToSet: { likedPosts: blogId },
+          $pull: { dislikedPosts: blogId },
+        }
+      : {
+          $pull: { likedPosts: blogId },
+        };
   } else if (action === "dislike") {
-    updateQuery = {
-      $addToSet: { dislikedPosts: blogId },
-      $pull: { likedPosts: blogId },
-    };
+    updateQuery = isDisliked
+      ? {
+          $addToSet: { dislikedPosts: blogId },
+          $pull: { likedPosts: blogId },
+        }
+      : {
+          $pull: { dislikedPosts: blogId },
+        };
   }
   const updatedData = await Subscriber.findOneAndUpdate(
     { email: email },

@@ -135,6 +135,8 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
       blogId,
       action,
       session,
+      isLiked,
+      isDisliked,
     });
 
     const upDatedBlog = await blogService.updateLikesDisLikesNoOfViewers(

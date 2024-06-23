@@ -12,8 +12,11 @@ const getAllBlogs = AsyncMiddleware(async (req, res) => {
 });
 
 const getAllPublishedBlogs = AsyncMiddleware(async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const publishedBlogs = await blogService.findAllPublishedBlogs(page, limit);
+  const { page = 1, category } = req.query;
+  const publishedBlogs = await blogService.findAllPublishedBlogs(
+    page,
+    category
+  );
 
   res.send(publishedBlogs);
 });

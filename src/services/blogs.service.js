@@ -17,14 +17,18 @@ async function findAllBlogs(page) {
   return { blogs, totalBlogs };
 }
 
-async function findAllPublishedBlogs(page, limit) {
+async function findAllPublishedBlogs(page, category) {
   const pageNumber = parseInt(page, 10) || 1;
-  const limitNumber = parseInt(limit, 10) || 10;
+  const limitNumber = 10;
   const skipNumber = (pageNumber - 1) * limitNumber;
+
+  const matchObj = category
+    ? { isPublished: true, category }
+    : { isPublished: true };
   // aggregation needs to be done for related blogs
   // return await ReindeerSoftBlog.find({ isPublished: true }).sort({ date: -1 });
   const blogsBasedonQuery = await ReindeerSoftBlog.aggregate([
-    { $match: { isPublished: true } },
+    { $match: matchObj },
     {
       $lookup: {
         from: "reinddeersoftblogs",
@@ -82,9 +86,7 @@ async function findAllPublishedBlogs(page, limit) {
     { $limit: limitNumber },
   ]);
 
-  const totalBlogs = await ReindeerSoftBlog.countDocuments({
-    isPublished: true,
-  });
+  const totalBlogs = await ReindeerSoftBlog.countDocuments(matchObj);
 
   return { blogsBasedonQuery, totalBlogs };
 }

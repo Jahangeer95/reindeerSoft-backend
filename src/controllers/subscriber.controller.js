@@ -6,7 +6,7 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   const { name, email } = req.body;
   const existingUser = await subscriberService.findSubscriberByEmail(email);
   if (existingUser) {
-    sendSubscriptionEmail({ name, email });
+    await sendSubscriptionEmail({ name, email });
     return res
       .header("subscriber_email", existingUser?.email)
       .send({ message: "Subscribed Successfully." });
@@ -18,7 +18,7 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   });
 
   if (newUser) {
-    sendSubscriptionEmail({ name, email });
+    await sendSubscriptionEmail({ name, email });
     res
       .header("subscriber_email", email)
       .send({ message: "Subscribed Successfully." });

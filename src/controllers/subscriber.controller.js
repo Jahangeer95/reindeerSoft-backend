@@ -1,3 +1,4 @@
+import { sendSubscriptionEmail } from "../email/nodemailer.js";
 import { AsyncMiddleware } from "../middlewares/async.middleware.js";
 import { subscriberService } from "../services/subscriber.service.js";
 
@@ -5,6 +6,7 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   const { name, email } = req.body;
   const existingUser = await subscriberService.findSubscriberByEmail(email);
   if (existingUser) {
+    sendSubscriptionEmail({ name, email });
     return res
       .header("subscriber_email", existingUser?.email)
       .send({ message: "Subscribed Successfully." });
@@ -16,6 +18,7 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   });
 
   if (newUser) {
+    sendSubscriptionEmail({ name, email });
     res
       .header("subscriber_email", email)
       .send({ message: "Subscribed Successfully." });

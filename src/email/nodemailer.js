@@ -3,8 +3,8 @@ import { createTransport } from "nodemailer";
 function mailTransport() {
   const transporter = createTransport({
     host: "smtp.titan.email",
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
       user: process.env.COMPANY_EMAIL,
       pass: process.env.EMAIL_PASSWORD,

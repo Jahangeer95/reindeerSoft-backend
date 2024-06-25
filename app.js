@@ -23,6 +23,9 @@ process.on("unhandledRejection", (err) => {
   });
 });
 
+logger.info("Company Email:", process.env.COMPANY_EMAIL);
+logger.info("Email Password:", process.env.EMAIL_PASSWORD);
+
 // error handling of uncaught exception
 process.on("uncaughtException", (err) => {
   logger.error("UNCAUGHT EXCEPTION! 💥 Shutting down...");

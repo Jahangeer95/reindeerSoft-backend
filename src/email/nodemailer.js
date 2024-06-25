@@ -14,7 +14,7 @@ function mailTransport() {
   return transporter;
 }
 
-export async function sendSubscriptionEmail({ name, email }) {
+export function sendSubscriptionEmail({ name, email }) {
   const subscriptionText = `<p>Hello ${name},</p>
   <p>Thank you for subscribing ReindeerSoft!</p>
   <p>We are excited to have you on board. Now, you will receive updates from us related to our blog, including the latest articles, news, and special content.</p>
@@ -28,7 +28,7 @@ export async function sendSubscriptionEmail({ name, email }) {
     html: subscriptionText,
   };
   try {
-    await transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions);
   } catch (error) {
     console.log(error?.message || "Something went wrong");
   }

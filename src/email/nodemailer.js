@@ -1,7 +1,8 @@
 import { createTransport } from "nodemailer";
+import { logger } from "../utils/logger.js";
 
 function mailTransport() {
-  const transporter = createTransport({
+  return createTransport({
     host: "smtp.titan.email",
     port: 465,
     secure: true,
@@ -12,8 +13,6 @@ function mailTransport() {
     debug: true,
     logger: true,
   });
-
-  return transporter;
 }
 
 export async function sendSubscriptionEmail({ name, email }) {
@@ -32,6 +31,7 @@ export async function sendSubscriptionEmail({ name, email }) {
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
+    logger.error(error?.message);
     console.log(error?.message || "Something went wrong");
   }
 }

@@ -31,9 +31,6 @@ export async function sendSubscriptionEmail({ name, email }) {
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    logger.info(error.message);
-    logger.error(process.env.COMPANY_EMAIL);
-    logger.error(error?.message);
-    console.log(error?.message || "Something went wrong");
+    logger.error(error?.message || "Something went wrong");
   }
 }

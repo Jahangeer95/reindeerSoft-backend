@@ -25,6 +25,7 @@ process.on("unhandledRejection", (err) => {
 
 logger.info("Company Email:", process.env.COMPANY_EMAIL);
 logger.info("Email Password:", process.env.EMAIL_PASSWORD);
+logger.info("PORT:", process.env.PORT);
 
 // error handling of uncaught exception
 process.on("uncaughtException", (err) => {

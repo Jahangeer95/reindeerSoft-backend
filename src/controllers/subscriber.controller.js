@@ -6,7 +6,7 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   const { name, email } = req.body;
   const existingUser = await subscriberService.findSubscriberByEmail(email);
   if (existingUser) {
-    await sendSubscriptionEmail({ name, email });
+    await sendSubscriptionEmail({ name, email, filename: "subscription" });
     return res
       .header("subscriber_email", existingUser?.email)
       .send({ message: "Subscribed Successfully." });
@@ -18,7 +18,7 @@ export const postSubscriber = AsyncMiddleware(async (req, res) => {
   });
 
   if (newUser) {
-    await sendSubscriptionEmail({ name, email });
+    await sendSubscriptionEmail({ name, email, filename: "subscription" });
     res
       .header("subscriber_email", email)
       .send({ message: "Subscribed Successfully." });
@@ -53,6 +53,12 @@ export const deleteSubscriber = AsyncMiddleware(async (req, res) => {
   const deletedSubscriber = await subscriberService.removeSubscriberByEmail(
     email
   );
+
+  await sendSubscriptionEmail({
+    name: existingUser?.name,
+    email,
+    filename: "unsubscription",
+  });
 
   res.send({ message: "Unsubscribed successfully..." });
 });

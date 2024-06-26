@@ -1,5 +1,9 @@
 import { createTransport } from "nodemailer";
 import { logger } from "../utils/logger.js";
+import fs from "fs";
+import path from "path";
+import handlebars from "handlebars";
+import { fileURLToPath } from "url";
 
 function mailTransport() {
   return createTransport({
@@ -16,6 +20,16 @@ function mailTransport() {
 }
 
 export async function sendSubscriptionEmail({ name, email }) {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const templatePath = path.join(
+    __dirname,
+    "../view/subscriptionTemplate.html"
+  );
+  const source = fs.readFileSync(templatePath, "utf-8");
+  const template = handlebars.compile(source);
+  const htmlToSend = template({ name });
+
   const subscriptionText = `<p>Hello ${name},</p>
   <p>Thank you for subscribing ReindeerSoft!</p>
   <p>We are excited to have you on board. Now, you will receive updates from us related to our blog, including the latest articles, news, and special content.</p>
@@ -26,7 +40,7 @@ export async function sendSubscriptionEmail({ name, email }) {
     to: email,
     subject: "Subscription Confirmation",
     // text: `Hello ${name},\n\nThank you for subscribing to ReindeerSoft!\n\nBest regards,\nTeam ReindeerSoft`,
-    html: subscriptionText,
+    html: htmlToSend,
   };
   try {
     await transporter.sendMail(mailOptions);

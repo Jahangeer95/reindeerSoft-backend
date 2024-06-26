@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      p {
+        margin: 20px;
+        font-size: 18px;
+      }
+      .container {
+        background-image: url("https://reindeersoft.com/logo.png");
+        background-blend-mode: lighten;
+        background-color: rgba(255, 255, 255, 0.96);
+        height: fit-content;
+      }
+      .social {
+        display: block;
+        margin: 30px auto;
+        width: fit-content;
+      }
+      .social > a {
+        text-decoration: none;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+      .social > a > img {
+        display: inline;
+        width: 30px;
+        height: 30px;
+      }
+
+      img {
+        display: block;
+        margin: 0 auto;
+        border-radius: 20px;
+        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+      }
+    </style>
+    <title>Subscription Confirmation</title>
+  </head>
+  <body>
+    <div style="max-width: 500px" class="container">
+      <img
+        src="https://reindeersoft.com/logo.png"
+        alt="company-logo"
+        style="display: block; width: 80px; height: auto"
+      />
+      <p>Hello <b style="color: #ff0011">{{name}}</b>,</p>
+      <p>Thank you for subscribing to <strong>ReindeerSoft!</strong></p>
+      <p style="max-width: 600px">
+        We are excited to have you on board. Now, you will receive updates from
+        us related to our blog, including the latest articles, news, and special
+        content.
+      </p>
+      <p style="text-align: center">
+        Best regards,<br /><br />Team ReindeerSoft
+      </p>
+      <div style="width: fit-content; margin: 0 auto">
+        <a href="https://reindeersoft.com/">Visit Our Website</a>
+      </div>
+      <div class="social">
+        <a href="https://www.facebook.com/ReindeerSoftIT?mibextid=ZbWKwL">
+          <img src="https://reindeersoft.com/Facebook.png" alt="fb-icon" />
+        </a>
+        <a href="https://x.com/ReindeerSoft_IT?t=IVXs3ufuxdGsIMx9BSxaBQ&s=09">
+          <img src="https://reindeersoft.com/twitter.png" alt="twitter" />
+        </a>
+        <a href="https://www.youtube.com/@reindeersoft-it">
+          <img src="https://reindeersoft.com/YouTube.png" alt="youtube-icon" />
+        </a>
+        <a
+          href="https://www.instagram.com/reindeersoft_lt/?igsh=ZnpqeDNzejF5NWFs"
+        >
+          <img
+            src="https://reindeersoft.com/instagram.png"
+            alt="instagram-icon"
+          />
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -8,6 +8,7 @@
         margin: 20px;
         font-size: 18px;
       }
+
       .container {
         background-image: url("https://reindeersoft.com/logo.png");
         background-position: center center;
@@ -16,16 +17,40 @@
         background-color: rgba(255, 255, 255, 0.96);
         height: fit-content;
       }
+
+      .blogPostTitle {
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center;
+        color: #005dbd;
+        padding: 10px;
+        border: 10px ridge #005dbd;
+        background-color: #ffffff;
+      }
+
+      .blogLink {
+        display: block;
+        width: fit-content;
+        text-decoration: none;
+        background-color: #005dbd;
+        color: #ffffff !important;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin: 20px auto;
+      }
+
       .social {
         display: block;
         margin: 30px auto;
         width: fit-content;
       }
+
       .social > a {
         text-decoration: none;
         cursor: pointer;
         margin-left: 10px;
       }
+
       .social > a > img {
         display: inline;
         width: 30px;
@@ -39,7 +64,7 @@
         box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
       }
     </style>
-    <title>Unsubscription Confirmation</title>
+    <title>ReindeerSoft blogs and updates</title>
   </head>
   <body>
     <div style="max-width: 700px" class="container">
@@ -49,19 +74,20 @@
         style="display: block; width: 80px; height: auto"
       />
       <p>Hello <b style="color: #ff0011">{{name}}</b>,</p>
+      <p>We are excited to inform you about our latest blog post titled:</p>
+
+      <p class="blogPostTitle">{{title}}</p>
+
+      <p>You can read the full post by clicking on the link below:</p>
+
       <p>
-        We are sorry to see you go! You have successfully unsubscribed from
-        <b>ReindeerSoft's</b> blog updates.
+        <a href="https://reindeersoft.com/blogs/{{slug}}" class="blogLink"
+          >Read Complete Blog</a
+        >
       </p>
       <p>
-        From now on, you will no longer receive updates about our latest
-        articles, news, and special content. If this was a mistake or you change
-        your mind, you can always resubscribe by visiting our blog.
-      </p>
-      <p>
-        Thank you for being a part of our community. If you have any feedback or
-        questions, feel free to contact us at
-        <a href="mailto:info@reindeersoft.com">info@reindeersoft.com</a>.
+        We hope you enjoy the read and find it informative. Stay tuned for more
+        updates from us!
       </p>
       <p style="text-align: center">
         Best regards,<br /><br />Team ReindeerSoft

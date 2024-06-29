@@ -156,7 +156,7 @@ async function updateExistingBlog(updatedBlogData, blogId) {
 }
 
 async function publishBlog(publishField, blogId) {
-  await ReindeerSoftBlog.findByIdAndUpdate(
+  return await ReindeerSoftBlog.findByIdAndUpdate(
     { _id: blogId },
     { $set: publishField },
     { new: true }

@@ -1,8 +1,9 @@
-import { AsyncMiddleware } from "../middlewares/async.middleware.js";
-import { blogService } from "../services/blogs.service.js";
-import { subscriberService } from "../services/subscriber.service.js";
-import { helper } from "../utils/helper.js";
 import mongoose from "mongoose";
+import { helper } from "../utils/helper.js";
+import { blogService } from "../services/blogs.service.js";
+import { sendSubscriptionEmail } from "../email/nodemailer.js";
+import { AsyncMiddleware } from "../middlewares/async.middleware.js";
+import { subscriberService } from "../services/subscriber.service.js";
 
 const getAllBlogs = AsyncMiddleware(async (req, res) => {
   const { page = 1 } = req.query;
@@ -85,7 +86,20 @@ const patchBlog = AsyncMiddleware(async (req, res) => {
       isPublished,
       publishDate: date,
     };
-    await blogService.publishBlog(publishBlogObj, blogId);
+    const blog = await blogService.publishBlog(publishBlogObj, blogId);
+
+    const subscribers = await subscriberService.findAllSubscribers();
+
+    subscribers.forEach(async (subscriber) => {
+      const { email, name } = subscriber;
+      await sendSubscriptionEmail({
+        name,
+        email,
+        filename: "blogPost",
+        blogData: blog,
+      });
+    });
+
     return res.send({ message: "Blog published successfully" });
   }
 

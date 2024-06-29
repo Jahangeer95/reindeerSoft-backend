@@ -8,6 +8,10 @@ async function findSubscriberByEmail(email) {
   return user;
 }
 
+async function findAllSubscribers() {
+  return await Subscriber.find();
+}
+
 async function findSubscriberByBlogId(blogId) {
   const subscriber = await Subscriber.findOne({
     $or: [{ likedPosts: blogId }, { dislikedPosts: blogId }],
@@ -71,6 +75,7 @@ async function removeSubscriberByEmail(email) {
 
 const subscriberService = {
   findSubscriberByEmail,
+  findAllSubscribers,
   findSubscriberByBlogId,
   createNewSubscriber,
   updateSubscriber,

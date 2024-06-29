@@ -4,6 +4,8 @@ import handlebars from "handlebars";
 import { fileURLToPath } from "url";
 import { createTransport } from "nodemailer";
 import { logger } from "../utils/logger.js";
+import { blogSubjectObject, filenameObj } from "./constants.js";
+import { helper } from "../utils/helper.js";
 
 function mailTransport() {
   return createTransport({
@@ -19,23 +21,30 @@ function mailTransport() {
   });
 }
 
-export async function sendSubscriptionEmail({ name, email, filename }) {
-  const filenameObj = {
-    subscription: "../view/subscriptionTemplate.html",
-    unsubscription: "../view/unsubscriptionTemplate.html",
-  };
+export async function sendSubscriptionEmail({
+  name,
+  email,
+  filename,
+  blogData,
+}) {
+  // filename is basically a variant here
+  // for getting file path and email subject
+
+  const { title, slug } = blogData || {};
+
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   const templatePath = path.join(__dirname, filenameObj[filename]);
   const source = fs.readFileSync(templatePath, "utf-8");
   const template = handlebars.compile(source);
-  const htmlToSend = template({ name });
+  const htmlToSend = template({ name, title, slug });
 
   const transporter = mailTransport();
+
   const mailOptions = {
     from: process.env.COMPANY_EMAIL,
     to: email,
-    subject: "Subscription Confirmation",
+    subject: blogSubjectObject[filename],
     // text: `Hello ${name},\n\nThank you for subscribing to ReindeerSoft!\n\nBest regards,\nTeam ReindeerSoft`,
     html: htmlToSend,
   };
